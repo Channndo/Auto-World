@@ -1,0 +1,352 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #111;
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    touch-action: none;
+    user-select: none;
+}
+
+#arcade-cabinet {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 4/3;
+    background: #000;
+    border: 4px solid #333;
+    box-shadow: 0 0 40px #000;
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+}
+
+.scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 20;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.hud-bar {
+    position: absolute;
+    top: 15px;
+    width: 42%;
+    height: 20px;
+    background: #400;
+    border: 2px solid #fff;
+}
+
+#p1-bar { left: 15px; }
+#p2-bar { right: 15px; }
+
+.hp-fill {
+    height: 100%;
+    background: #fc0;
+    width: 100%;
+    transition: width 0.1s;
+}
+
+.name {
+    position: absolute;
+    top: 45px;
+    font-size: 8px;
+    color: #fff;
+    text-shadow: 1px 1px #000;
+}
+
+#p1-name { left: 15px; color: #4af; }
+#p2-name { right: 15px; text-align: right; color: #f44; }
+
+#pause-btn {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    pointer-events: auto;
+    z-index: 101;
+}
+
+#pause-btn:active {
+    background: #fff;
+    color: #000;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    pointer-events: auto;
+    text-align: center;
+}
+
+h1 {
+    color: #FFD700;
+    text-shadow: 4px 4px #800;
+    font-size: 30px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+button {
+    background: #004488;
+    color: #fff;
+    border: 3px solid #fff;
+    padding: 15px 20px;
+    font-family: 'Press Start 2P';
+    font-size: 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 15px;
+}
+
+button:active {
+    transform: translateY(2px);
+    background: #003366;
+}
+
+#cutscene-screen {
+    display: none;
+    z-index: 40;
+    background: #000;
+}
+
+#cs-portrait {
+    width: 200px;
+    height: 200px;
+    background: #222;
+    border: 3px solid #fff;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px #FFD700;
+}
+
+#dialogue-box {
+    width: 85%;
+    max-width: 600px;
+    background: #000044;
+    border: 2px solid #fff;
+    padding: 15px;
+    color: #fff;
+    font-size: 10px;
+    line-height: 1.8;
+    min-height: 60px;
+    cursor: pointer;
+    text-align: left;
+}
+
+#select-screen {
+    display: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 40px;
+}
+
+#char-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.char-btn {
+    background: #222;
+    border: 2px solid #555;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.char-btn:hover {
+    background: #333;
+    border-color: #fff;
+    transform: scale(1.02);
+}
+
+.char-header {
+    color: gold;
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.char-desc {
+    color: #aaa;
+    font-size: 6px;
+    margin-bottom: 8px;
+    font-style: italic;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 6px;
+}
+
+.stat-label {
+    width: 30px;
+    color: #fff;
+}
+
+.stat-track {
+    flex-grow: 1;
+    height: 6px;
+    background: #444;
+    border: 1px solid #777;
+    margin-left: 5px;
+}
+
+.stat-val {
+    height: 100%;
+    background: #0f0;
+}
+
+#controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 140px;
+    pointer-events: none;
+    display: none;
+    z-index: 100;
+}
+
+.dpad {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    width: 140px;
+    height: 140px;
+}
+
+.action {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 140px;
+    height: 140px;
+}
+
+.touch-btn {
+    position: absolute;
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    pointer-events: auto;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    backdrop-filter: blur(2px);
+}
+
+.touch-btn:active {
+    background: rgba(255,255,255,0.4);
+    border-color: #fff;
+}
+
+#btn-l { left: 0; top: 50px; width: 45px; height: 45px; }
+#btn-r { right: 0; top: 50px; width: 45px; height: 45px; }
+#btn-u { left: 47px; top: 0; width: 45px; height: 45px; }
+#btn-a {
+    right: 0;
+    top: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(200,0,0,0.3);
+    border-color: #d00;
+}
+#btn-b {
+    left: 0;
+    bottom: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(0,0,200,0.3);
+    border-color: #00d;
+}
+#btn-blk {
+    right: 0;
+    top: -20px;
+    width: 40px;
+    height: 30px;
+    background: #444;
+}
+
+@media (max-width: 800px) {
+    #arcade-cabinet {
+        width: 100vw;
+        height: 100vh;
+        border: none;
+        max-width: none;
+    }
+
+    #controls {
+        display: block;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    #char-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        max-height: 60vh;
+    }
+}
