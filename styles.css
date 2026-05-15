@@ -564,11 +564,14 @@ button:active {
         height: 52%;
     }
 
+    /* Bumper (block): top-left — A is top-right / B is bottom-left (no overlap) */
     #controls #btn-blk {
-        right: 0;
+        left: 0;
         top: 0;
-        width: 40%;
-        height: 30%;
+        right: auto;
+        width: 38%;
+        height: 28%;
+        border-radius: 8px;
     }
 
     #controls #btn-start {
