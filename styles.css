@@ -57,41 +57,7 @@ body {
     background: #000;
 }
 
-.game-lcd {
-    flex: 1 1 auto;
-    min-height: 0;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.screen-brand {
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    justify-items: center;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 6px 0 12px;
-    pointer-events: none;
-    background: #000;
-    text-align: center;
-}
-
-.screen-brand img {
-    display: block;
-    height: clamp(13px, 3.2vmin, 22px);
-    width: auto;
-    max-width: min(220px, 85vw);
-    margin: 0 auto;
-    opacity: 0.88;
-    object-fit: contain;
-    object-position: center;
-}
-
-.game-lcd canvas#gameCanvas {
+#game-screen canvas#gameCanvas {
     display: block;
     width: 100%;
     flex: 1;
@@ -321,8 +287,21 @@ button:active {
     flex-shrink: 0;
     pointer-events: none;
     z-index: 1;
-    overflow: hidden;
-    contain: layout style;
+    overflow: visible;
+}
+
+/* Branding overlays control panel (transparent); desktop hides with #controls */
+.controls-brand {
+    display: none;
+    pointer-events: none;
+}
+
+.controls-brand img {
+    display: block;
+    height: clamp(11px, 3vmin, 17px);
+    width: auto;
+    max-width: min(210px, 78vw);
+    opacity: 0.9;
 }
 
 .dpad,
@@ -436,14 +415,7 @@ button:active {
         overflow: hidden;
     }
 
-    .game-lcd {
-        flex: 1;
-        min-height: 0;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .game-lcd canvas#gameCanvas {
+    #game-screen canvas#gameCanvas {
         flex: 1;
         min-height: 0;
         height: auto !important;
@@ -460,24 +432,27 @@ button:active {
     }
 
     body {
-        display: block;
+        display: flex;
+        flex-direction: column;
         margin: 0;
-        padding: var(--safe-top) 0 var(--safe-bottom);
+        padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
         width: 100vw;
         max-width: 100vw;
-        height: 100%;
-        min-height: 100dvh;
+        height: 100dvh;
+        max-height: 100dvh;
         overflow: hidden;
         background: #000;
+        box-sizing: border-box;
     }
 
     #game-wrapper {
         display: grid;
         grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         grid-template-columns: 1fr;
+        flex: 1;
         width: 100vw;
         max-width: 100vw;
-        height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
+        min-height: 0;
         margin: 0;
         padding: 0;
         overflow: hidden;
@@ -510,7 +485,7 @@ button:active {
         border-bottom-style: solid;
     }
 
-    .game-lcd canvas#gameCanvas {
+    #game-screen canvas#gameCanvas {
         flex: 1 1 auto;
         width: 100% !important;
         max-width: 100%;
@@ -545,9 +520,20 @@ button:active {
         gap: 6px;
         pointer-events: auto;
         z-index: 1;
-        contain: layout style;
     }
 
+    #controls .controls-brand {
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: clamp(6px, 1.8vmin, 14px);
+        transform: translateX(-50%);
+        z-index: 5;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        line-height: 0;
+    }
     #controls .dpad {
         grid-column: 1;
         grid-row: 1;
