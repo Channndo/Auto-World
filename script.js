@@ -148,6 +148,10 @@ const GAME_W = 640;
 const GAME_H = 360;
 const GROUND_Y = 300;
 
+/** Player HP scales with durability; tuned up so runs are survivable vs boss HP pools. */
+const PLAYER_HP_BASE = 130;
+const PLAYER_HP_PER_DUR = 28;
+
 function resize() {
     canvas.width = GAME_W;
     canvas.height = GAME_H;
@@ -311,14 +315,14 @@ let selectedTech = TECHS[0];
 const ROSTER = [
     { id: 'erica', name: 'ERICA', hp: 200, spd: 4, pwr: 1.2, skin: '#ffdbac', hair: '#4a3121', style: 'long', suit: '#0033aa', pants: '#111', text: "Get off your phone! I have a waiter oil change!", body: 'skinny' },
     { id: 'johnny', name: 'JOHNNY', hp: 250, spd: 8, pwr: 1.5, skin: '#ffdbac', hair: '#d4a017', style: 'spiky', suit: '#0033aa', pants: '#111', text: "Customer is staring. Look busy.", body: 'skinny' },
-    { id: 'jj', name: 'JJ', hp: 300, spd: 1, pwr: 2.0, skin: '#ffaaaa', hair: '#222', style: 'short', suit: '#0033aa', pants: '#111', body: 'fat', weapon: 'wrench', h_mod: 90, w_mod: 75, text: "Ticket #404 needs a rotation." },
-    { id: 'chris', name: 'CHRIS', hp: 700, spd: 4, pwr: 4.5, skin: '#eeb', hair: '#654321', style: 'beard', suit: '#0033aa', pants: '#111', body: 'huge', h_mod: 110, w_mod: 130, text: "GRRAAAH! DO THE BRAKES!", aggro: 7.0 },
+    { id: 'jj', name: 'JJ', hp: 280, spd: 1, pwr: 1.8, skin: '#ffaaaa', hair: '#222', style: 'short', suit: '#0033aa', pants: '#111', body: 'fat', weapon: 'wrench', h_mod: 90, w_mod: 75, text: "Ticket #404 needs a rotation." },
+    { id: 'chris', name: 'CHRIS', hp: 560, spd: 4, pwr: 3.7, skin: '#eeb', hair: '#654321', style: 'beard', suit: '#0033aa', pants: '#111', body: 'huge', h_mod: 110, w_mod: 130, text: "GRRAAAH! DO THE BRAKES!", aggro: 6.0 },
     { id: 'brett', name: 'BRETT', hp: 500, spd: 30, pwr: 2.5, skin: '#ffccaa', hair: '#da2', style: 'short', suit: '#FF69B4', pants: '#111', text: "Efficiency is down! Move it!", h_mod: 95 },
-    { id: 'jason', name: 'JASON', hp: 1200, spd: 2, pwr: 8.5, skin: '#dcb', hair: '#444', style: 'short', suit: '#d0d0d0', pants: '#111', body: 'huge', h_mod: 115, w_mod: 130, text: "I am the service lane." },
-    { id: 'dennis', name: 'DENNIS', hp: 800, spd: 10, pwr: 5.0, skin: '#eaa', hair: '#888', style: 'bald', suit: '#111', pants: '#111', body: 'fat', text: "This is my house. You're fired." },
-    { id: 'clint', name: 'CLINT', hp: 1400, spd: 6, pwr: 7.0, skin: '#ffdbac', hair: '#eee', style: 'short', suit: '#111', pants: '#111', body: 'skinny', h_mod: 130, w_mod: 35, text: "I can sell ice to an eskimo. Get back to work." },
-    { id: 'matt', name: 'MATT', hp: 1600, spd: 14, pwr: 7.5, skin: '#ffccaa', hair: '#420', style: 'short', suit: '#111', pants: '#111', h_mod: 110, w_mod: 60, text: "I learned from the best. You're done." },
-    { id: 'jb', name: 'JB', hp: 2500, spd: 5, pwr: 9.5, skin: '#5c3a1e', hair: '#888', style: 'beard', suit: '#ff6600', pants: '#ff6600', body: 'huge', h_mod: 160, w_mod: 145, text: "I broke out of prison just to fire you myself.", aggro: 15.0 },
+    { id: 'jason', name: 'JASON', hp: 920, spd: 2, pwr: 6.8, skin: '#dcb', hair: '#444', style: 'short', suit: '#d0d0d0', pants: '#111', body: 'huge', h_mod: 115, w_mod: 130, text: "I am the service lane." },
+    { id: 'dennis', name: 'DENNIS', hp: 680, spd: 10, pwr: 4.2, skin: '#eaa', hair: '#888', style: 'bald', suit: '#111', pants: '#111', body: 'fat', text: "This is my house. You're fired." },
+    { id: 'clint', name: 'CLINT', hp: 1020, spd: 6, pwr: 5.5, skin: '#ffdbac', hair: '#eee', style: 'short', suit: '#111', pants: '#111', body: 'skinny', h_mod: 130, w_mod: 35, text: "I can sell ice to an eskimo. Get back to work." },
+    { id: 'matt', name: 'MATT', hp: 1180, spd: 14, pwr: 6.0, skin: '#ffccaa', hair: '#420', style: 'short', suit: '#111', pants: '#111', h_mod: 110, w_mod: 60, text: "I learned from the best. You're done." },
+    { id: 'jb', name: 'JB', hp: 1750, spd: 5, pwr: 7.2, skin: '#5c3a1e', hair: '#888', style: 'beard', suit: '#ff6600', pants: '#ff6600', body: 'huge', h_mod: 160, w_mod: 145, text: "I broke out of prison just to fire you myself.", aggro: 11.0 },
     { id: 'joe', name: 'JOE', hp: 400, spd: 7, pwr: 2.5, skin: '#ffdbac', hair: '#222', style: 'cap_beard', suit: '#111', pants: '#111', body: 'fat', weapon: 'ratchet', h_mod: 91, w_mod: 60, text: "I just wanna go home." }
 ];
 
@@ -873,7 +877,9 @@ class Fighter {
         this.y = GROUND_Y;
         this.vx = 0;
         this.vy = 0;
-        this.maxHp = isPlayer ? 50 + (config.dur * 10) : config.hp;
+        this.maxHp = isPlayer
+            ? PLAYER_HP_BASE + Math.floor(config.dur * PLAYER_HP_PER_DUR)
+            : config.hp;
         this.hp = this.maxHp;
         this.action = 'IDLE';
         this.timer = 0;
