@@ -8,63 +8,70 @@
 </head>
 <body>
 
-<div id="arcade-cabinet">
-    <div class="scanlines"></div>
-    <canvas id="gameCanvas"></canvas>
-    <canvas id="portraitCanvas" width="256" height="256" style="display:none;"></canvas>
-    
-    <div id="ui-layer">
-        <div id="p1-bar" class="hud-bar"><div class="hp-fill" id="hp1"></div></div>
-        <div class="name" id="p1-name">TECH</div>
-        <div id="p2-bar" class="hud-bar"><div class="hp-fill" id="hp2"></div></div>
-        <div class="name" id="p2-name">OPPONENT</div>
-        <div id="pause-btn" onclick="togglePause()">||</div>
-    </div>
+<div id="game-wrapper">
+    <div id="game-screen" class="control-board-screen-black">
+        <div id="arcade-cabinet">
+            <div class="scanlines"></div>
+            <canvas id="gameCanvas"></canvas>
+            <canvas id="portraitCanvas" width="256" height="256" style="display:none;"></canvas>
 
-    <div id="title-screen" class="screen">
-        <h1>AUTO<br>WORLD</h1>
-        <button onclick="toSelect()">START GAME</button>
-    </div>
+            <div id="ui-layer">
+                <div id="p1-bar" class="hud-bar"><div class="hp-fill" id="hp1"></div></div>
+                <div class="name" id="p1-name">TECH</div>
+                <div id="p2-bar" class="hud-bar"><div class="hp-fill" id="hp2"></div></div>
+                <div class="name" id="p2-name">OPPONENT</div>
+                <div id="pause-btn" onclick="togglePause()">||</div>
+            </div>
 
-    <div id="select-screen" class="screen">
-        <h2 style="color: #FFD700; margin-bottom: 20px;">SELECT TECH</h2>
-        <div id="char-grid"></div>
-    </div>
+            <div id="title-screen" class="screen">
+                <h1>AUTO<br>WORLD</h1>
+                <button onclick="toSelect()">START GAME</button>
+            </div>
 
-    <div id="cutscene-screen" class="screen">
-        <h2 style="color: #ffcc00; margin-bottom: 15px;" id="cs-header">NEXT</h2>
-        <div id="cs-portrait">
-            <img id="cs-img" style="width:100%; height:100%; object-fit:contain;">
+            <div id="select-screen" class="screen">
+                <h2 style="color: #FFD700; margin-bottom: 20px;">SELECT TECH</h2>
+                <div id="char-grid"></div>
+            </div>
+
+            <div id="cutscene-screen" class="screen">
+                <h2 style="color: #ffcc00; margin-bottom: 15px;" id="cs-header">NEXT</h2>
+                <div id="cs-portrait">
+                    <img id="cs-img" style="width:100%; height:100%; object-fit:contain;">
+                </div>
+                <div style="color:yellow; margin:10px; font-size: 12px;" id="cs-name">NAME</div>
+                <div id="dialogue-box" onclick="nextText()">Dialogue...</div>
+            </div>
+
+            <div id="game-over-screen" class="screen" style="display: none;">
+                <h1 id="go-msg" style="color:red">FIRED</h1>
+                <button onclick="resetGame()">RE-APPLY</button>
+            </div>
+
+            <div id="pause-screen" class="screen" style="display: none;">
+                <h1 style="color: #FFD700; margin-bottom: 20px;">PAUSED</h1>
+                <button onclick="togglePause()">RESUME</button>
+                <button id="btn-control-board" type="button">CONTROL BOARD: BLACK</button>
+                <button onclick="quitToTitle()">QUIT TO TITLE</button>
+            </div>
         </div>
-        <div style="color:yellow; margin:10px; font-size: 12px;" id="cs-name">NAME</div>
-        <div id="dialogue-box" onclick="nextText()">Dialogue...</div>
     </div>
 
-    <div id="game-over-screen" class="screen" style="display: none;">
-        <h1 id="go-msg" style="color:red">FIRED</h1>
-        <button onclick="resetGame()">RE-APPLY</button>
-    </div>
-
-    <div id="pause-screen" class="screen" style="display: none;">
-        <h1 style="color: #FFD700; margin-bottom: 20px;">PAUSED</h1>
-        <button onclick="togglePause()">RESUME</button>
-        <button onclick="quitToTitle()">QUIT TO TITLE</button>
-    </div>
-
-    <div id="controls">
+    <div id="controls" class="control-board-black">
         <div class="dpad">
             <div class="touch-btn" id="btn-l" data-k="a">←</div>
             <div class="touch-btn" id="btn-r" data-k="d">→</div>
             <div class="touch-btn" id="btn-u" data-k="w">↑</div>
         </div>
+        <div class="touch-btn" id="btn-start">START</div>
         <div class="action">
-            <div class="touch-btn" id="btn-a" data-k="j">P</div>
             <div class="touch-btn" id="btn-b" data-k="k">K</div>
+            <div class="touch-btn" id="btn-a" data-k="j">P</div>
             <div class="touch-btn" id="btn-blk" data-k="l">B</div>
         </div>
     </div>
 </div>
 
+<script src="settings.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
