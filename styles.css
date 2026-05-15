@@ -303,6 +303,8 @@ button:active {
     display: block;
     opacity: 0.92;
     object-fit: contain;
+    /* Dark wordmark on tinted control boards stays readable */
+    filter: brightness(1.22) contrast(1.02);
 }
 
 .dpad,
@@ -428,30 +430,31 @@ button:active {
 @media (max-width: 799px) {
     html {
         width: 100%;
-        height: 100%;
-        height: -webkit-fill-available;
-        overflow: hidden;
+        height: auto;
+        min-height: 100%;
+        overflow-x: clip;
+        overflow-y: auto;
     }
 
     /*
-     * Safari: avoid 100dvh (dynamic viewport) — it is taller than the visible
-     * area when the bottom toolbar is shown, which paints a black band and hides
-     * the chrome. Fixed inset + border-box matches the *layout* viewport.
+     * Use the *small* viewport (100svh) so height matches Safari with top + bottom
+     * toolbars shown — not fixed positioning / 100dvh, which often paints under the bar.
      */
     body {
-        position: fixed;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
+        position: relative;
         margin: 0;
         padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-        width: auto;
-        max-width: none;
-        height: auto;
-        overflow: hidden;
+        width: 100%;
+        height: 100vh;
+        height: 100svh;
+        max-height: 100vh;
+        max-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        overflow-x: clip;
+        overflow-y: hidden;
         background: #000;
         box-sizing: border-box;
     }
