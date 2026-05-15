@@ -68,20 +68,27 @@ body {
 
 .screen-brand {
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px 12px 10px;
+    display: grid;
+    place-items: center;
+    justify-items: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 6px 0 12px;
     pointer-events: none;
     background: #000;
+    text-align: center;
 }
 
 .screen-brand img {
     display: block;
     height: clamp(13px, 3.2vmin, 22px);
     width: auto;
-    max-width: min(200px, 72vw);
+    max-width: min(220px, 85vw);
+    margin: 0 auto;
     opacity: 0.88;
+    object-fit: contain;
+    object-position: center;
 }
 
 .game-lcd canvas#gameCanvas {
