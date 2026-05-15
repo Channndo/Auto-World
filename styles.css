@@ -8,6 +8,8 @@
 :root {
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
+    /* Set by settings.js on mobile via VisualViewport (real paint height between toolbars) */
+    --app-vvh: 100svh;
 }
 
 html,
@@ -430,31 +432,26 @@ button:active {
 @media (max-width: 799px) {
     html {
         width: 100%;
-        height: auto;
-        min-height: 100%;
-        overflow-x: clip;
-        overflow-y: auto;
+        height: 100%;
+        overflow: hidden;
     }
 
     /*
-     * Use the *small* viewport (100svh) so height matches Safari with top + bottom
-     * toolbars shown — not fixed positioning / 100dvh, which often paints under the bar.
+     * Body height = VisualViewport (--app-vvh from settings.js): exact pixels between Safari
+     * top + bottom chrome. No bottom safe-area padding here (would stack under vv and show black gap).
      */
     body {
         position: relative;
         margin: 0;
-        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
         width: 100%;
-        height: 100vh;
-        height: 100svh;
-        max-height: 100vh;
-        max-height: 100svh;
+        height: var(--app-vvh, 100svh);
+        max-height: var(--app-vvh, 100svh);
         display: flex;
         flex-direction: column;
         align-items: stretch;
         justify-content: flex-start;
-        overflow-x: clip;
-        overflow-y: hidden;
+        overflow: hidden;
         background: #000;
         box-sizing: border-box;
     }
