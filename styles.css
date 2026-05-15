@@ -8,8 +8,6 @@
 :root {
     --safe-top: env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
-    /* Set by settings.js on mobile via VisualViewport (real paint height between toolbars) */
-    --app-vvh: 100svh;
 }
 
 html,
@@ -292,21 +290,10 @@ button:active {
     overflow: visible;
 }
 
-/* Branding overlays control panel (transparent); desktop hides with #controls */
-.controls-brand {
+/* Branding on control board (Car Planet pattern); desktop hides with #controls */
+#device-brand {
     display: none;
     pointer-events: none;
-}
-
-#controls .controls-brand img {
-    height: clamp(11px, 3vmin, 18px);
-    width: auto;
-    max-width: min(210px, 78vw);
-    display: block;
-    opacity: 0.92;
-    object-fit: contain;
-    /* Dark wordmark on tinted control boards stays readable */
-    filter: brightness(1.22) contrast(1.02);
 }
 
 .dpad,
@@ -428,7 +415,7 @@ button:active {
     }
 }
 
-/* Mobile: Game Boy face — 50% screen / 50% controls, full width */
+/* Mobile: Game Boy face — mirror Car Planet shell (gb-layout): block body + calc(100dvh − safe) */
 @media (max-width: 799px) {
     html {
         width: 100%;
@@ -436,21 +423,14 @@ button:active {
         overflow: hidden;
     }
 
-    /*
-     * Body height = VisualViewport (--app-vvh from settings.js): exact pixels between Safari
-     * top + bottom chrome. No bottom safe-area padding here (would stack under vv and show black gap).
-     */
     body {
-        position: relative;
+        display: block;
         margin: 0;
-        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
-        width: 100%;
-        height: var(--app-vvh, 100svh);
-        max-height: var(--app-vvh, 100svh);
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
+        padding: var(--safe-top) 0 var(--safe-bottom);
+        width: 100vw;
+        max-width: 100vw;
+        height: 100%;
+        min-height: 100dvh;
         overflow: hidden;
         background: #000;
         box-sizing: border-box;
@@ -460,10 +440,9 @@ button:active {
         display: grid;
         grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         grid-template-columns: 1fr;
-        flex: 1 1 auto;
-        width: 100%;
-        min-width: 0;
-        min-height: 0;
+        width: 100vw;
+        max-width: 100vw;
+        height: calc(100dvh - var(--safe-top) - var(--safe-bottom));
         margin: 0;
         padding: 0;
         overflow: hidden;
@@ -487,6 +466,7 @@ button:active {
         justify-self: stretch;
         background: #000;
         border-bottom: 3px solid #333;
+        box-shadow: none;
         z-index: 2;
         isolation: isolate;
     }
@@ -527,23 +507,34 @@ button:active {
         display: grid;
         grid-template-columns: 1fr 0.4fr 1fr;
         grid-template-rows: minmax(0, 1fr) auto;
-        padding: 8px 6vw 12px;
+        padding: 8px 6vw max(10px, env(safe-area-inset-bottom, 10px));
         gap: 6px;
         pointer-events: auto;
         z-index: 1;
     }
 
-    #controls .controls-brand {
-        display: block;
+    #controls #device-brand {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         position: absolute;
-        left: 50%;
-        top: clamp(6px, 1.8vmin, 14px);
-        transform: translateX(-50%);
+        top: 8px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        pointer-events: none;
         z-index: 5;
-        margin: 0;
-        padding: 0;
         background: transparent;
-        line-height: 0;
+        box-shadow: none;
+    }
+
+    #controls #device-brand img {
+        display: block;
+        height: clamp(10px, 2.8vmin, 15px);
+        width: auto;
+        max-height: clamp(11px, 3vmin, 16px);
+        opacity: 0.85;
+        object-fit: contain;
     }
     #controls .dpad {
         grid-column: 1;

@@ -1,40 +1,4 @@
 const CONTROL_BOARD_STORAGE_KEY = 'autoworld-control-board';
-
-/** iOS Safari: sync layout to actual visible viewport (between toolbars), not CSS vh/svh guesses. */
-function isMobileViewport() {
-    return window.matchMedia('(max-width: 799px)').matches;
-}
-
-function syncMobileViewportHeightVar() {
-    if (!isMobileViewport()) {
-        document.documentElement.style.removeProperty('--app-vvh');
-        return;
-    }
-    const vv = window.visualViewport;
-    const h = vv && vv.height > 0 ? vv.height : window.innerHeight;
-    document.documentElement.style.setProperty('--app-vvh', `${Math.max(1, Math.round(h * 100) / 100)}px`);
-}
-
-function initMobileVisualViewportClamp() {
-    syncMobileViewportHeightVar();
-
-    const onChange = () => requestAnimationFrame(syncMobileViewportHeightVar);
-
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', onChange);
-        window.visualViewport.addEventListener('scroll', onChange);
-    }
-    window.addEventListener('resize', onChange);
-    window.addEventListener('orientationchange', onChange);
-    window.addEventListener('pageshow', (e) => {
-        if (e.persisted) onChange();
-    });
-    /** Safari settles chrome after first frames */
-    requestAnimationFrame(() => {
-        requestAnimationFrame(syncMobileViewportHeightVar);
-    });
-}
-
 const CONTROL_BOARD_THEMES = [
     { id: 'black', label: 'BLACK' },
     { id: 'grape', label: 'GRAPE' },
@@ -92,16 +56,6 @@ function initControlBoardSettings() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    initMobileVisualViewportClamp();
-    initControlBoardSettings();
-});
+document.addEventListener('DOMContentLoaded', initControlBoardSettings);
 
 window.cycleControlBoard = cycleControlBoard;
-
-try {
-    if (document.documentElement && isMobileViewport()) {
-        syncMobileViewportHeightVar();
-    }
-} catch (_) { /* noop */ }
-
